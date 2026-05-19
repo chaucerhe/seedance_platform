@@ -1,1 +1,1 @@
-# seedance_plateform
+# seedance_platform
