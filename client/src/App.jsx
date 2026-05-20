@@ -57,9 +57,6 @@ function App() {
   const [form, setForm] = useState({
     model: 'doubao-seedance-2-0-260128',
     prompt: '',
-    imageUrl: '',
-    videoUrl: '',
-    audioUrl: '',
     resolution: '720p',
     ratio: 'adaptive',
     duration: 5,
@@ -185,11 +182,7 @@ function App() {
       content.push({ type: 'text', text: form.prompt.trim() })
     }
 
-    const imageUrls = form.imageUrl.split('\n').filter((u) => u.trim())
-    const allImageSources = [
-      ...imageFiles.map((f) => f.dataUrl),
-      ...imageUrls.map((u) => u.trim()),
-    ]
+    const allImageSources = imageFiles.map((f) => f.dataUrl)
 
     allImageSources.forEach((src) => {
       const entry = { type: 'image_url', image_url: { url: src } }
@@ -203,14 +196,10 @@ function App() {
 
     if (videoFile) {
       content.push({ type: 'video_url', video_url: { url: videoFile.dataUrl }, role: 'reference_video' })
-    } else if (form.videoUrl.trim()) {
-      content.push({ type: 'video_url', video_url: { url: form.videoUrl.trim() }, role: 'reference_video' })
     }
 
     if (audioFile) {
       content.push({ type: 'audio_url', audio_url: { url: audioFile.dataUrl }, role: 'reference_audio' })
-    } else if (form.audioUrl.trim()) {
-      content.push({ type: 'audio_url', audio_url: { url: form.audioUrl.trim() }, role: 'reference_audio' })
     }
 
     return content
@@ -378,14 +367,6 @@ function App() {
                   </div>
                 )}
 
-                <label className="sub-label">或输入图片 URL（每行一个）</label>
-                <textarea
-                  name="imageUrl"
-                  value={form.imageUrl}
-                  onChange={handleInputChange}
-                  placeholder="https://example.com/image.jpg"
-                  rows={2}
-                />
               </div>
 
               <div className="form-group">
@@ -410,14 +391,6 @@ function App() {
                     <span className="file-name placeholder">未选择文件</span>
                   )}
                 </div>
-                <label className="sub-label">或输入视频 URL</label>
-                <input
-                  type="text"
-                  name="videoUrl"
-                  value={form.videoUrl}
-                  onChange={handleInputChange}
-                  placeholder="https://example.com/video.mp4"
-                />
               </div>
 
               <div className="form-group">
@@ -442,15 +415,8 @@ function App() {
                     <span className="file-name placeholder">未选择文件</span>
                   )}
                 </div>
-                <label className="sub-label">或输入音频 URL</label>
-                <input
-                  type="text"
-                  name="audioUrl"
-                  value={form.audioUrl}
-                  onChange={handleInputChange}
-                  placeholder="https://example.com/audio.wav"
-                />
               </div>
+
             </div>
 
             <div className="form-section">
