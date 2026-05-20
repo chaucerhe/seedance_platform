@@ -366,6 +366,7 @@ function App() {
                   <div className="uploaded-images">
                     {imageFiles.map((file, i) => (
                       <div key={i} className="image-thumb">
+                        <span className="file-index">图{i + 1}</span>
                         <img src={file.dataUrl} alt={file.name} />
                         <div className="image-info">
                           <span className="image-name">{file.name}</span>
@@ -401,6 +402,7 @@ function App() {
                   <div className="file-list">
                     {videoFiles.map((f, i) => (
                       <div key={i} className="file-item">
+                        <span className="file-index-badge">视频{i + 1}</span>
                         <span className="file-icon">🎬</span>
                         <span className="file-item-name">{f.name}</span>
                         <span className="file-item-size">({formatSize(f.dataUrl)})</span>
@@ -433,6 +435,7 @@ function App() {
                   <div className="file-list">
                     {audioFiles.map((f, i) => (
                       <div key={i} className="file-item">
+                        <span className="file-index-badge">音频{i + 1}</span>
                         <span className="file-icon">🎵</span>
                         <span className="file-item-name">{f.name}</span>
                         <span className="file-item-size">({formatSize(f.dataUrl)})</span>

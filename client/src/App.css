@@ -197,6 +197,20 @@
   border: 1px solid #e5e7eb;
 }
 
+.file-index {
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  background: #6366f1;
+  color: #fff;
+  font-size: 10px;
+  font-weight: 600;
+  padding: 1px 5px;
+  border-radius: 3px;
+  z-index: 2;
+  pointer-events: none;
+}
+
 .image-thumb img {
   width: 100%;
   height: 100%;
@@ -317,6 +331,16 @@
 
 .file-icon {
   font-size: 16px;
+}
+
+.file-index-badge {
+  background: #6366f1;
+  color: #fff;
+  font-size: 10px;
+  font-weight: 600;
+  padding: 1px 6px;
+  border-radius: 3px;
+  white-space: nowrap;
 }
 
 .file-item-name {
