@@ -68,8 +68,8 @@ function App() {
   })
 
   const [imageFiles, setImageFiles] = useState([])
-  const [videoFile, setVideoFile] = useState(null)
-  const [audioFile, setAudioFile] = useState(null)
+  const [videoFiles, setVideoFiles] = useState([])
+  const [audioFiles, setAudioFiles] = useState([])
   const [isDragOver, setIsDragOver] = useState(false)
 
   const videoInputRef = useRef(null)
@@ -163,17 +163,27 @@ function App() {
   }
 
   const handleVideoFileSelect = async (e) => {
-    const file = e.target.files[0]
-    if (!file) return
-    const dataUrl = await fileToDataUrl(file)
-    setVideoFile({ name: file.name, dataUrl })
+    const files = Array.from(e.target.files)
+    for (const file of files) {
+      const dataUrl = await fileToDataUrl(file)
+      setVideoFiles((prev) => [...prev, { name: file.name, dataUrl }])
+    }
   }
 
   const handleAudioFileSelect = async (e) => {
-    const file = e.target.files[0]
-    if (!file) return
-    const dataUrl = await fileToDataUrl(file)
-    setAudioFile({ name: file.name, dataUrl })
+    const files = Array.from(e.target.files)
+    for (const file of files) {
+      const dataUrl = await fileToDataUrl(file)
+      setAudioFiles((prev) => [...prev, { name: file.name, dataUrl }])
+    }
+  }
+
+  const removeVideo = (index) => {
+    setVideoFiles((prev) => prev.filter((_, i) => i !== index))
+  }
+
+  const removeAudio = (index) => {
+    setAudioFiles((prev) => prev.filter((_, i) => i !== index))
   }
 
   const buildContent = () => {
@@ -194,13 +204,13 @@ function App() {
       content.push(entry)
     })
 
-    if (videoFile) {
-      content.push({ type: 'video_url', video_url: { url: videoFile.dataUrl }, role: 'reference_video' })
-    }
+    videoFiles.forEach((f) => {
+      content.push({ type: 'video_url', video_url: { url: f.dataUrl }, role: 'reference_video' })
+    })
 
-    if (audioFile) {
-      content.push({ type: 'audio_url', audio_url: { url: audioFile.dataUrl }, role: 'reference_audio' })
-    }
+    audioFiles.forEach((f) => {
+      content.push({ type: 'audio_url', audio_url: { url: f.dataUrl }, role: 'reference_audio' })
+    })
 
     return content
   }
@@ -370,7 +380,7 @@ function App() {
               </div>
 
               <div className="form-group">
-                <label>参考视频</label>
+                <label>参考视频（最多 3 个）</label>
                 <div className="file-input-row">
                   <button type="button" className="file-btn" onClick={() => videoInputRef.current?.click()}>
                     📁 选择视频文件
@@ -379,22 +389,30 @@ function App() {
                     ref={videoInputRef}
                     type="file"
                     accept={VIDEO_ACCEPT}
+                    multiple
                     style={{ display: 'none' }}
                     onChange={handleVideoFileSelect}
                   />
-                  {videoFile ? (
-                    <span className="file-name">
-                      {videoFile.name} ({formatSize(videoFile.dataUrl)})
-                      <button type="button" className="clear-file-btn" onClick={() => setVideoFile(null)}>✕</button>
-                    </span>
-                  ) : (
+                  {videoFiles.length === 0 && (
                     <span className="file-name placeholder">未选择文件</span>
                   )}
                 </div>
+                {videoFiles.length > 0 && (
+                  <div className="file-list">
+                    {videoFiles.map((f, i) => (
+                      <div key={i} className="file-item">
+                        <span className="file-icon">🎬</span>
+                        <span className="file-item-name">{f.name}</span>
+                        <span className="file-item-size">({formatSize(f.dataUrl)})</span>
+                        <button type="button" className="clear-file-btn" onClick={() => removeVideo(i)}>✕</button>
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
 
               <div className="form-group">
-                <label>参考音频</label>
+                <label>参考音频（最多 3 段）</label>
                 <div className="file-input-row">
                   <button type="button" className="file-btn" onClick={() => audioInputRef.current?.click()}>
                     📁 选择音频文件
@@ -403,18 +421,26 @@ function App() {
                     ref={audioInputRef}
                     type="file"
                     accept={AUDIO_ACCEPT}
+                    multiple
                     style={{ display: 'none' }}
                     onChange={handleAudioFileSelect}
                   />
-                  {audioFile ? (
-                    <span className="file-name">
-                      {audioFile.name} ({formatSize(audioFile.dataUrl)})
-                      <button type="button" className="clear-file-btn" onClick={() => setAudioFile(null)}>✕</button>
-                    </span>
-                  ) : (
+                  {audioFiles.length === 0 && (
                     <span className="file-name placeholder">未选择文件</span>
                   )}
                 </div>
+                {audioFiles.length > 0 && (
+                  <div className="file-list">
+                    {audioFiles.map((f, i) => (
+                      <div key={i} className="file-item">
+                        <span className="file-icon">🎵</span>
+                        <span className="file-item-name">{f.name}</span>
+                        <span className="file-item-size">({formatSize(f.dataUrl)})</span>
+                        <button type="button" className="clear-file-btn" onClick={() => removeAudio(i)}>✕</button>
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
 
             </div>
