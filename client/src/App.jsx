@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from 'react'
 import axios from 'axios'
+import LoginPage from './components/LoginPage'
 import './App.css'
 
 const STATUS_CONFIG = {
@@ -47,6 +48,7 @@ const VIDEO_ACCEPT = 'video/mp4,video/quicktime,video/x-msvideo,video/webm'
 const AUDIO_ACCEPT = 'audio/wav,audio/mpeg,audio/mp3'
 
 function App() {
+  const [authenticated, setAuthenticated] = useState(() => localStorage.getItem('seedance_auth') === 'true')
   const [activeTab, setActiveTab] = useState('create')
   const [tasks, setTasks] = useState([])
   const [loading, setLoading] = useState(false)
@@ -281,6 +283,10 @@ function App() {
     if (bytes < 1024) return `${bytes} B`
     if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`
     return `${(bytes / (1024 * 1024)).toFixed(1)} MB`
+  }
+
+  if (!authenticated) {
+    return <LoginPage onLogin={() => setAuthenticated(true)} />
   }
 
   return (

@@ -11,6 +11,17 @@ const ARK_BASE_URL = process.env.ARK_BASE_URL || 'https://ark.cn-beijing.volces.
 app.use(cors());
 app.use(express.json({ limit: '100mb' }));
 
+const VALID_USER = { username: 'chaucer', password: 'Welcome2didi' };
+
+app.post('/api/login', (req, res) => {
+  const { username, password } = req.body;
+  if (username === VALID_USER.username && password === VALID_USER.password) {
+    res.json({ success: true });
+  } else {
+    res.status(401).json({ success: false, message: '用户名或密码错误' });
+  }
+});
+
 const arkClient = axios.create({
   baseURL: ARK_BASE_URL,
   headers: {
